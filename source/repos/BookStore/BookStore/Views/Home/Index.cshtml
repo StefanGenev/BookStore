@@ -1,0 +1,19 @@
+﻿@model IEnumerable<Book>
+
+@{
+    ViewBag.Title = "Книги";
+}
+
+<div class="card-deck">
+    @foreach (var book in Model)
+    {
+        <div class="card m-3 threeElementsInRow">
+            <div class="card-header">
+                <h3>@book.Title</h3>
+            </div>
+            <a asp-controller="Home" asp-action="view"
+           asp-route-id="@book.Id"
+           class="stretched-link"></a>
+        </div>
+    }
+</div>
