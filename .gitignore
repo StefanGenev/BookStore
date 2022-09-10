@@ -1,0 +1,51 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Videos
+/University Data Modeler
+/source
+/Searches
+/Saved Games
+/PycharmProjects
+/Pictures
+/Oracle
+/OneDrive
+/ntuser.ini
+/NTUSER.DAT{53b39e88-18c4-11ea-a811-000d3aa4692b}.TMContainer00000000000000000002.regtrans-ms
+/NTUSER.DAT{53b39e88-18c4-11ea-a811-000d3aa4692b}.TMContainer00000000000000000001.regtrans-ms
+/NTUSER.DAT{53b39e88-18c4-11ea-a811-000d3aa4692b}.TM.blf
+/ntuser.dat.LOG2
+/ntuser.dat.LOG1
+/NTUSER.DAT
+/Music
+/Links
+/IdeaProjects
+/hitman
+/Favorites
+/Downloads
+/Documents
+/Desktop
+/Contacts
+/AppData
+/AMDRM_Install.log
+/3D Objects
+/.viminfo
+/.tooling
+/.templateengine
+/.p2
+/.openjfx
+/.nuget
+/.node_repl_history
+/.m2
+/.librarymanager
+/.IntelliJIdea2018.1
+/.gitconfig
+/.eclipse
+/.dotnet
+/.config
+/.cisco
+/.cache
+/.bash_history
+/.angular-config.json
+/.android

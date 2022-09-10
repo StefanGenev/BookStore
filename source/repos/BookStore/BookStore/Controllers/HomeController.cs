@@ -14,16 +14,16 @@ namespace BookStore.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IBaseRepository<Book> _booksTable;
+        private readonly IBaseRepository<Book> _booksRepository;
 
         public HomeController(IBaseRepository<Book> booksRepo)
         {
-            _booksTable = booksRepo;
+            _booksRepository = booksRepo;
         }
 
         public IActionResult Index()
         {
-            List<Book> books = _booksTable.GetTable()
+            List<Book> books = _booksRepository.GetTable()
                 .Include(book => book.Author)
                 .Include(book => book.Publisher)
                 .ToList();

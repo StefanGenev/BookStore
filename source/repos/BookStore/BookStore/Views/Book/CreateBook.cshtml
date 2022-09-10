@@ -1,0 +1,77 @@
+﻿@using BookStore.Models.NewFolder
+@model CreateBookViewModel
+
+@{
+    ViewBag.Title = "Добави нова книга";
+}
+
+<h1>Добавяне на книга</h1>
+
+<div class="row">
+    <div class="col-md-7 px-md-5 align-self-start">
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Title"></label>
+                <textarea class="form-control" asp-for="Title" rows="1"></textarea>
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description"></label>
+                <textarea class="form-control" asp-for="Description" rows="3"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        @Html.LabelFor(x => Model.AuthorId)
+                        @Html.DropDownListFor(x => Model.Authors, new SelectList(Model.Authors, "Id", "Name"), htmlAttributes: new { @class = "form-control", id = "Author" })
+                        @Html.ValidationMessageFor(x => x.Authors, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        @Html.LabelFor(x => Model.PublisherId)
+                        @Html.DropDownListFor(x => Model.PublisherId, new SelectList(Model.Publishers, "Id", "Name"), htmlAttributes: new { @class = "form-control", @id = "Publisher" })
+                        @Html.ValidationMessageFor(x => x.PublisherId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label asp-for="Price"></label>
+                        <input asp-for="Price" class="form-control" type="number" />
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label asp-for="YearOfPublishing"></label>
+                        <input asp-for="YearOfPublishing" class="form-control" type="number" />
+                        <span asp-validation-for="YearOfPublishing" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Image"></label>
+                <div class="custom-file">
+                    <input asp-for="Image" class="form-control custom-file-input">
+                    <label class="custom-file-label">Избери изображение за корица...</label>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Create</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.custom-file-input').on("change", function () {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).next('.custom-file-label').html(fileName);
+            });
+        });
+    </script>
+}
