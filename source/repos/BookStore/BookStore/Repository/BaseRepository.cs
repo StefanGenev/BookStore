@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Collections.Generic;
 
 namespace BookStore.Repository
@@ -16,7 +17,12 @@ namespace BookStore.Repository
 
         public void Delete(object id)
         {
-            throw new System.NotImplementedException();
+            T obj = _table.Find(id);
+            if (obj != null)
+            {
+                _table.Remove(obj);
+                _dbContext.SaveChanges();
+            }
         }
 
         public DbSet<T> GetTable()
@@ -26,7 +32,8 @@ namespace BookStore.Repository
 
         public void Insert(T obj)
         {
-            throw new System.NotImplementedException();
+            _table.Add(obj);
+            _dbContext.SaveChanges();
         }
 
         public IEnumerable<T> SelectAll()
@@ -36,12 +43,14 @@ namespace BookStore.Repository
 
         public T SelectById(object id)
         {
-            throw new System.NotImplementedException();
+            return _table.Find(id);
         }
 
         public void Update(T obj)
         {
-            throw new System.NotImplementedException();
+            _table.Attach(obj);
+            _dbContext.Entry(obj).State = EntityState.Modified;
+            _dbContext.SaveChanges();
         }
     }
 }
