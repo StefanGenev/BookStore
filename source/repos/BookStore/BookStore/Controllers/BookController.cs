@@ -141,7 +141,7 @@ namespace BookStore.Controllers
             {
                 book.ImagePath = FileUpload.ProcessUploadedFile(model.Image, _hostingEnvironment, "images");
             }
-            else if(book.ImagePath.Length <= 0)
+            else if (book.ImagePath.Length <= 0)
             {
                 book.ImagePath = "no-image.jpg";
             }
@@ -156,6 +156,13 @@ namespace BookStore.Controllers
             _booksRepository.Update(book);
 
             return RedirectToAction("View", new { id = book.Id });
+        }
+
+        [HttpGet]
+        public ActionResult Delete(int id)
+        {
+            _booksRepository.Delete(id);
+            return RedirectToAction("index", "home");
         }
     }
 }
