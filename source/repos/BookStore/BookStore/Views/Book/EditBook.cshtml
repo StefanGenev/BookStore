@@ -1,0 +1,81 @@
+﻿@using BookStore.Models.ViewModels
+@model BookViewModel
+
+@{
+    ViewBag.Title = "Редакция на книга";
+}
+
+<h1>Редакция на книга</h1>
+
+@{
+    var imagePath = "/images/" + ViewBag.ImagePath;
+    <div class="row justify-content-center align-items-center">
+        <div class="container">
+            <form method="post" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col mb-2">
+                        <img class="editImage" src="@imagePath" asp-append-version="true" alt="imageerror" />
+                        <div class="custom-file mt-3 form-control">
+                            <input asp-for="@Model.Image" class="form-control custom-file-input">
+                            <label class="custom-file-label">Избор на файл</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label asp-for="Title"></label>
+                            <textarea class="form-control" asp-for="Title" rows="1"></textarea>
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Description"></label>
+                            <textarea class="form-control" asp-for="Description" rows="6"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => Model.AuthorId)
+                            @Html.DropDownListFor(x => Model.AuthorId, new SelectList(Model.Authors, "Id", "Name"), htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(x => x.AuthorId, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => Model.PublisherId)
+                            @Html.DropDownListFor(x => Model.PublisherId, new SelectList(Model.Publishers, "Id", "Name"), htmlAttributes: new { @class = "form-control", @id = "Publisher" })
+                            @Html.ValidationMessageFor(x => x.PublisherId, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Price"></label>
+                            <input asp-for="Price" class="form-control" type="number" step="0.01" />
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="YearOfPublishing"></label>
+                            <input asp-for="YearOfPublishing" class="form-control" type="number" />
+                            <span asp-validation-for="YearOfPublishing" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input type="submit" asp-controller="Book" asp-action="Edit" asp-route-id="@ViewBag.BookId" class="btn btn-warning w-100" value="Редакция" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.custom-file-input').on("change", function () {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).next('.custom-file-label').html(fileName);
+            });
+        });
+    </script>
+}
