@@ -42,11 +42,11 @@ namespace BookStore.Controllers
         {
             if (!ModelState.IsValid)
             {
-                BookViewModel bookViewModel = new BookViewModel();
-                bookViewModel.Authors = _authorsRepository.SelectAll().ToList();
-                bookViewModel.Publishers = _publishersRepository.SelectAll().ToList();
+                model = new BookViewModel();
+                model.Authors = _authorsRepository.SelectAll().ToList();
+                model.Publishers = _publishersRepository.SelectAll().ToList();
 
-                return View("CreateBook", bookViewModel);
+                return View("CreateBook", model);
             }
 
             string imageFileName;
@@ -120,21 +120,21 @@ namespace BookStore.Controllers
             Book book = _booksRepository.SelectById(id);
             if (!ModelState.IsValid)
             {
-                BookViewModel bookViewModel = new BookViewModel();
+                model = new BookViewModel();
 
-                bookViewModel.Title = book.Title;
-                bookViewModel.Description = book.Description;
-                bookViewModel.AuthorId = book.AuthorId;
-                bookViewModel.Authors = _authorsRepository.SelectAll().ToList();
-                bookViewModel.Price = book.Price;
-                bookViewModel.PublisherId = book.PublisherId;
-                bookViewModel.Publishers = _publishersRepository.SelectAll().ToList();
-                bookViewModel.YearOfPublishing = book.YearOfPublishing;
+                model.Title = book.Title;
+                model.Description = book.Description;
+                model.AuthorId = book.AuthorId;
+                model.Authors = _authorsRepository.SelectAll().ToList();
+                model.Price = book.Price;
+                model.PublisherId = book.PublisherId;
+                model.Publishers = _publishersRepository.SelectAll().ToList();
+                model.YearOfPublishing = book.YearOfPublishing;
 
                 ViewBag.BookId = book.Id;
                 ViewBag.ImagePath = book.ImagePath;
 
-                return View("EditBook", bookViewModel);
+                return View("EditBook", model);
             }
 
             if (model.Image != null)

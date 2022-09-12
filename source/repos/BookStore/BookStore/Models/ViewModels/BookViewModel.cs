@@ -6,14 +6,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BookStore.Models.ViewModels
 {
-    public class DateAttribute : RangeAttribute
-    {
-        public DateAttribute()
-          : base(typeof(DateTime), "1/1/1800", DateTime.Now.ToShortDateString()) 
-        {
-            //TODO different file
-        }
-    }
     public class BookViewModel
     {
         [Required(ErrorMessage = "Непопълнено заглавие")]
