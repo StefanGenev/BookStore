@@ -5,7 +5,7 @@
 }
 
 @{
-    var imagePath = "/images/" + (Model.ImagePath ?? "no-image.jpg");
+    var imagePath = "/images/" + (Model.ImagePath.Length <= 0 ? "no-image.jpg" : Model.ImagePath );
 
     <div class="portfolio-modal show" id="portfolioModal1" tabindex="-1" role="dialog">
         <div class="modal-dialog">

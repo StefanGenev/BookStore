@@ -61,6 +61,7 @@ namespace BookStore.Controllers
                 LastName = model.LastName,
                 Address = model.Address,
                 Gender = model.Gender,
+                Phone = model.Phone,
                 ImagePath = imageFileName
             };
 
@@ -96,8 +97,9 @@ namespace BookStore.Controllers
             readerViewModel.LastName = reader.LastName;
             readerViewModel.Address = reader.Address;
             readerViewModel.Gender = reader.Gender;
+            readerViewModel.Phone = reader.Phone;
 
-            ViewBag.BookId = reader.Id;
+            ViewBag.ReaderId = reader.Id;
             ViewBag.ImagePath = reader.ImagePath;
 
             return View("EditReader", readerViewModel);
@@ -116,8 +118,9 @@ namespace BookStore.Controllers
                 model.LastName = reader.LastName;
                 model.Address = reader.Address;
                 model.Gender = reader.Gender;
+                model.Phone = reader.Phone;
 
-                ViewBag.BookId = id;
+                ViewBag.ReaderId = id;
                 ViewBag.ImagePath = reader.ImagePath;
 
                 return View("EditReader", model);
@@ -137,6 +140,7 @@ namespace BookStore.Controllers
             reader.LastName = model.LastName;
             reader.Address = model.Address;
             reader.Gender = model.Gender;
+            reader.Phone = model.Phone;
 
             _readersRepository.Update(reader);
 

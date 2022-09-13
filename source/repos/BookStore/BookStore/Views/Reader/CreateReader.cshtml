@@ -1,0 +1,69 @@
+﻿@using BookStore.Models.ViewModels
+@model ReaderViewModel
+
+@{
+    ViewBag.Title = "Добави нов читател";
+}
+
+<h1>@ViewBag.Title</h1>
+
+<div class="row">
+    <div class="col-md-7 px-md-5 align-self-start">
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label asp-for="FirstName"></label>
+                <textarea class="form-control" asp-for="FirstName" rows="1"></textarea>
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MiddleName"></label>
+                <textarea class="form-control" asp-for="MiddleName" rows="1"></textarea>
+                <span asp-validation-for="MiddleName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName"></label>
+                <textarea class="form-control" asp-for="LastName" rows="1"></textarea>
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        @Html.LabelFor(x => Model.Gender)
+                        @Html.DropDownListFor(x => Model.Gender, @Html.GetEnumSelectList<Gender>(), htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.Gender, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>    
+            <div class="form-group">
+                <label asp-for="Address"></label>
+                <textarea class="form-control" asp-for="Address" rows="4"></textarea>
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Phone"></label>
+                <textarea class="form-control" asp-for="Phone" rows="1"></textarea>
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Image"></label>
+                <div class="custom-file">
+                    <input asp-for="Image" class="form-control custom-file-input">
+                    <label class="custom-file-label">Избери изображение за корица...</label>
+                    <span asp-validation-for="Image" class="text-danger"></span>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Добави</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.custom-file-input').on("change", function () {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).next('.custom-file-label').html(fileName);
+            });
+        });
+    </script>
+}

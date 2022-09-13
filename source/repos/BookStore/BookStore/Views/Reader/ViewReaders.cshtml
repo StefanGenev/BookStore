@@ -3,11 +3,12 @@
 @{
     ViewBag.Title = "Читатели";
 }
-<header class="masthead">
+<header class="masthead" id="readers_masthead">
     <div class="container">
-        <div class="masthead-subheading">Секция Читатели</div>
-        <div class="masthead-heading text-uppercase">Администрирайте читателите от тук</div>
-        <a class="btn btn-primary btn-xl text-uppercase" href="#portfolio">Читатели</a>
+        <div class="masthead-subheading">Читатели</div>
+        <div class="masthead-heading text-uppercase">Администрирайте читателите си</div>
+        <a class="btn btn-primary btn-xl text-uppercase" href="#portfolio">Текущи Читатели</a>
+        <a class="btn btn-primary btn-xl text-uppercase" asp-area="Reader" asp-controller="Reader" asp-action="Create">Добави нов читател</a>
     </div>
 </header>
 <section class="page-section bg-light" id="portfolio">
@@ -19,15 +20,15 @@
         <div class="row">
             @foreach (var reader in Model)
             {
-                var imagePath = "/images/" + (@reader.ImagePath ?? "no-avatar.jpg");
-                <div class="col-lg-4 col-sm-6 mb-4">
+                var imagePath = "/images/" + (@reader.ImagePath.Length <= 0 ? "no-avatar.jpg" : @reader.ImagePath);
+                <div class="col-sm-3 mb-4">
                     <!-- Reader item 1-->
-                    <div class="portfolio-item">
+                    <div class="portfolio-item card">
                         <a class="portfolio-link" data-bs-toggle="modal" asp-controller="Reader" asp-action="View" asp-route-id="@reader.Id">
                             <div class="portfolio-hover">
                                 <div class="portfolio-hover-content"><p class="fas fa-plus fa-3x">Преглед</p></div>
                             </div>
-                            <img class="img-fluid" src="@imagePath" alt="..." />
+                            <img class="img-fluid card-img-top" src="@imagePath" alt="..." />
                         </a>
                         <div class="portfolio-caption">
                             <div class="portfolio-caption-heading">@reader.FirstName @reader.LastName</div>

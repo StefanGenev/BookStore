@@ -15,6 +15,8 @@ namespace BookStore.Models
 
         public Gender Gender { get; set; }
 
+        public string Phone { get; set; }
+
         public string ImagePath { get; set; }
     }
 }

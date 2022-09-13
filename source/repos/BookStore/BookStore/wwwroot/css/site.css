@@ -12559,7 +12559,12 @@ section#contact {
         color: #ced4da;
     }
 
-.editImage {
-    max-width:450px;
-    max-height:450px;
+.card-img-top {
+    width: 100% !important;
+    height: 16vw !important;
+    object-fit: cover !important;
+}
+
+#readers_masthead {
+    background-image: url("/images/readers.jpg");
 }
