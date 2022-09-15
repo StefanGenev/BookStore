@@ -66,6 +66,7 @@ namespace BookStore.Controllers
                 AuthorId = model.AuthorId,
                 Price = model.Price,
                 PublisherId = model.PublisherId,
+                CopiesAvailable = model.CopiesAvailable,
                 YearOfPublishing = model.YearOfPublishing,
                 ImagePath = imageFileName
             };
@@ -76,7 +77,6 @@ namespace BookStore.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public ActionResult View(int id)
         {
             Book book = _booksRepository.SelectById(id);
@@ -93,7 +93,6 @@ namespace BookStore.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public ActionResult Edit(int id)
         {
             BookViewModel bookViewModel = new BookViewModel();
@@ -106,6 +105,7 @@ namespace BookStore.Controllers
             bookViewModel.Price = book.Price;
             bookViewModel.PublisherId = book.PublisherId;
             bookViewModel.Publishers = _publishersRepository.SelectAll().ToList();
+            bookViewModel.CopiesAvailable = book.CopiesAvailable;
             bookViewModel.YearOfPublishing = book.YearOfPublishing;
 
             ViewBag.BookId = book.Id;
@@ -129,6 +129,7 @@ namespace BookStore.Controllers
                 model.Price = book.Price;
                 model.PublisherId = book.PublisherId;
                 model.Publishers = _publishersRepository.SelectAll().ToList();
+                model.CopiesAvailable = book.CopiesAvailable;
                 model.YearOfPublishing = book.YearOfPublishing;
 
                 ViewBag.BookId = book.Id;
@@ -151,6 +152,7 @@ namespace BookStore.Controllers
             book.AuthorId = model.AuthorId;
             book.Price = model.Price;
             book.PublisherId = model.PublisherId;
+            book.CopiesAvailable = model.CopiesAvailable;
             book.YearOfPublishing = model.YearOfPublishing;
 
             _booksRepository.Update(book);

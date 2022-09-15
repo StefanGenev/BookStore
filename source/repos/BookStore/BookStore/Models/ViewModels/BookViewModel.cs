@@ -41,6 +41,10 @@ namespace BookStore.Models.ViewModels
         [DisplayName("Година на издаване")]
         public int YearOfPublishing { get; set; }
 
+        [Required]
+        [DisplayName("Налични копия")]
+        public int CopiesAvailable { get; set; }
+
         [DisplayName("Снимка на корица")]
         public IFormFile Image { get; set; }
     }

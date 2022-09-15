@@ -18,6 +18,7 @@ namespace BookStore.Controllers
             _booksRepository = booksRepo;
         }
 
+        [AllowAnonymous]
         public IActionResult Index()
         {
             List<Book> books = _booksRepository.GetTable()
@@ -26,11 +27,6 @@ namespace BookStore.Controllers
                 .ToList();
 
             return View(books);
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

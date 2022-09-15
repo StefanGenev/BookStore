@@ -2,7 +2,6 @@
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq.Expressions;
 
 namespace BookStore.Models.ViewModels
 {
@@ -19,6 +18,11 @@ namespace BookStore.Models.ViewModels
         [Required(ErrorMessage = "Непопълнена фамилия")]
         [DisplayName("Фамилия")]
         public string LastName { get; set; }
+
+        [Required(ErrorMessage = "Непопълнен имейл")]
+        [DisplayName("Имейл")]
+        [EmailAddress]
+        public string Email { get; set; }
 
         [Required(ErrorMessage = "Непопълнен адрес")]
         [DisplayName("Адрес")]

@@ -1,26 +1,33 @@
 ﻿@model IEnumerable<Book>
+@using Microsoft.AspNetCore.Identity;
+@using System.Security.Claims;
+@inject SignInManager<Reader> _signInManager;
 
 @{
     ViewBag.Title = "Книги";
+    bool bIsSignedIn = _signInManager.IsSignedIn(User);
 }
 <header class="masthead">
     <div class="container">
         <div class="masthead-subheading">Добре дошли в BookStore!</div>
         <div class="masthead-heading text-uppercase">Заемете книга още сега</div>
         <a class="btn btn-primary btn-xl text-uppercase" href="#portfolio">Налични книги</a>
-        <a class="btn btn-primary btn-xl text-uppercase" asp-area="Book" asp-controller="Book" asp-action="Create">Добави книга</a>
+        @if (bIsSignedIn)
+        {
+            <a class="btn btn-primary btn-xl text-uppercase" asp-area="Book" asp-controller="Book" asp-action="Create">Добави книга</a>
+        }
     </div>
 </header>
 <section class="page-section bg-light" id="portfolio">
     <div class="container">
         <div class="text-center">
             <h2 class="section-heading text-uppercase">Налични книги</h2>
-            <h3 class="section-subheading text-muted">Нашият избор състоящ се от всякакви жанрове</h3>
+            <h3 class="section-subheading text-muted">Нашият избор, състоящ се от всякакви жанрове</h3>
         </div>
         <div class="row">
             @foreach (var book in Model)
             {
-                var imagePath = "/images/" + (@book.ImagePath.Length <= 0 ? "no-image.jpg" : @book.ImagePath );
+                var imagePath = "/images/" + (@book.ImagePath.Length <= 0 ? "no-image.jpg" : @book.ImagePath);
                 <div class="col-sm-3 mb-4">
                     <!-- Book item 1-->
                     <div class="portfolio-item">

@@ -4,11 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.Repository
 {
-    public class ApplicationDBContext : DbContext
+    public class ApplicationDBContext : IdentityDbContext<Reader>
     {
-        public DbSet<Book> Books { get; set; }
-        public DbSet<Order> Orders { get; set; }
-
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> contextOptions)
             : base(contextOptions)
         {

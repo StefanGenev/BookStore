@@ -18,6 +18,8 @@ namespace BookStore.Models
 
         public int YearOfPublishing { get; set; }
 
+        public int CopiesAvailable { get; set; }
+
         public string ImagePath { get; set; }
 
     }
