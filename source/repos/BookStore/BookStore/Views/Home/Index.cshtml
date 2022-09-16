@@ -1,18 +1,15 @@
 ﻿@model IEnumerable<Book>
-@using Microsoft.AspNetCore.Identity;
-@using System.Security.Claims;
-@inject SignInManager<Reader> _signInManager;
 
 @{
     ViewBag.Title = "Книги";
-    bool bIsSignedIn = _signInManager.IsSignedIn(User);
 }
+
 <header class="masthead">
     <div class="container">
         <div class="masthead-subheading">Добре дошли в BookStore!</div>
         <div class="masthead-heading text-uppercase">Заемете книга още сега</div>
         <a class="btn btn-primary btn-xl text-uppercase" href="#portfolio">Налични книги</a>
-        @if (bIsSignedIn)
+        @if (User.IsInRole("Administrators"))
         {
             <a class="btn btn-primary btn-xl text-uppercase" asp-area="Book" asp-controller="Book" asp-action="Create">Добави книга</a>
         }
@@ -40,6 +37,7 @@
                         <div class="portfolio-caption card-footer">
                             <div class="portfolio-caption-heading">@book.Title</div>
                             <div class="portfolio-caption-subheading text-muted">@book.Price Лв.</div>
+                            <div class="portfolio-caption-subheading text-muted">Налични копия: @book.CopiesAvailable</div>
                         </div>
                     </div>
                 </div>

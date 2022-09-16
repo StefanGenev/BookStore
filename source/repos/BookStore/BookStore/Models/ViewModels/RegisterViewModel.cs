@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace BookStore.Models.ViewModels
 {
-    public class ReaderViewModel
+    public class RegisterViewModel
     {
         [Required(ErrorMessage = "Непопълнено име")]
         [DisplayName("Име")]
@@ -22,6 +22,7 @@ namespace BookStore.Models.ViewModels
         [Required(ErrorMessage = "Непопълнен имейл")]
         [DisplayName("Имейл")]
         [EmailAddress]
+        [Remote(action: "IsEmailInUse", controller: "Reader")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Непопълнен адрес")]
@@ -34,9 +35,22 @@ namespace BookStore.Models.ViewModels
 
         [Required(ErrorMessage = "Непопълнен телефон")]
         [DisplayName("Телефон")]
+        [DataType(DataType.PhoneNumber)]
         public string Phone { get; set; }
 
         [DisplayName("Профилна снимка")]
         public IFormFile Image { get; set; }
+
+        [Required(ErrorMessage = "Невалидна парола")]
+        [DisplayName("Парола")]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+
+        [Required(ErrorMessage = "Потвърдете паролата")]
+        [DisplayName("Потвърждаване на парола")]
+        [DataType(DataType.Password)]
+        [Compare("Password",
+            ErrorMessage = "Двете пароли не съвпадат")]
+        public string ConfirmPassword { get; set; }
     }
 }

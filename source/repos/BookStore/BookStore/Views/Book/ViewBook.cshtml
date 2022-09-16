@@ -1,11 +1,15 @@
 ﻿@model Book;
+@using Microsoft.AspNetCore.Identity;
+@using System.Security.Claims;
+@inject SignInManager<Reader> _signInManager;
 
 @{
     ViewBag.Title = "Преглед на книга";
+    bool bIsSignedIn = _signInManager.IsSignedIn(User);
 }
 
 @{
-    var imagePath = "/images/" + (Model.ImagePath.Length <= 0 ? "no-image.jpg" : Model.ImagePath );
+    var imagePath = "/images/" + (Model.ImagePath.Length <= 0 ? "no-image.jpg" : Model.ImagePath);
 
     <div class="portfolio-modal show" id="portfolioModal1" tabindex="-1" role="dialog">
         <div class="modal-dialog">
@@ -32,15 +36,22 @@
                                         <strong>Година на издаване:</strong>
                                         @Model.YearOfPublishing
                                     </li>
+                                    <li>
+                                        <strong>Налични копия:</strong>
+                                        @Model.CopiesAvailable
+                                    </li>
                                 </ul>
                                 <a class="btn btn-primary btn-xl text-uppercase" data-bs-dismiss="modal" asp-area="Book" asp-controller="Book" asp-action="Edit" asp-route-id="@Model.Id">
                                     <i class="fas fa-xmark me-1"></i>
                                     <span class="text-white">Редакция</span>
                                 </a>
-                                <a class="btn btn-primary btn-xl text-uppercase" data-bs-dismiss="modal" asp-area="Book" asp-controller="Book" asp-action="Delete" asp-route-id="@Model.Id">
-                                    <i class="fas fa-xmark me-1"></i>
-                                    <span class="text-white">Изтриване</span>
-                                </a>
+                                @if (bIsSignedIn && User.IsInRole("Administrators"))
+                                {
+                                    <a class="btn btn-primary btn-xl text-uppercase" data-bs-dismiss="modal" asp-area="Book" asp-controller="Book" asp-action="Delete" asp-route-id="@Model.Id">
+                                        <i class="fas fa-xmark me-1"></i>
+                                        <span class="text-white">Изтриване</span>
+                                    </a>
+                                }
                             </div>
                         </div>
                     </div>

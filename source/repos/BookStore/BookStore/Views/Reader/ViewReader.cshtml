@@ -1,53 +1,74 @@
-﻿@model Reader;
+﻿@using BookStore.Models.ViewModels
+@model ReaderProfileViewModel;
+
 
 @{
     ViewBag.Title = "Преглед на читател";
 }
 
 @{
-    var imagePath = "/images/" + (Model.ImagePath.Length <= 0 ? "no-avatar.jpg" : Model.ImagePath);
+    var imagePath = "/images/" + (ViewBag.ImagePath.Length <= 0 ? "no-avatar.jpg" : ViewBag.ImagePath);
 
     <div class="portfolio-modal show" id="portfolioModal1" tabindex="-1" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="container">
-                        <div class="row justify-content-center">
-                            <div class="col-lg-8">
-                                <div class="modal-body">
-                                    <!-- Project details-->
-                                    <h2 class="text-uppercase">@Model.FirstName @Model.LastName</h2>
-                                    <img class="img-fluid d-block mx-auto" src="@imagePath" alt="..." />
-                                    <ul class="list-inline">
-                                        <li>
-                                            <strong>Имена:</strong>
-                                            @Model.FirstName @Model.MiddleName @Model.LastName
-                                        </li>
-                                        <li>
-                                            <strong>Пол:</strong>
-                                            @Html.DisplayFor(x=> x.Gender)
-                                        </li>
-                                        <li>
-                                            <strong>Адрес:</strong>
-                                            @Model.Address
-                                        </li>
-                                        <li>
-                                            <strong>Телефон:</strong>
-                                            @Model.PhoneNumber
-                                        </li>
-                                    </ul>
-                                <a class="btn btn-primary btn-xl text-uppercase" data-bs-dismiss="modal" asp-area="Reader" asp-controller="Reader" asp-action="Edit" asp-route-id="@Model.Id">
-                                        <i class="fas fa-xmark me-1"></i>
-                                        <span class="text-white">Редакция</span>
-                                    </a>
-                                <a class="btn btn-primary btn-xl text-uppercase" data-bs-dismiss="modal" asp-area="Reader" asp-controller="Reader" asp-action="Delete" asp-route-id="@Model.Id">
-                                        <i class="fas fa-xmark me-1"></i>
-                                        <span class="text-white">Изтриване</span>
-                                    </a>
-                                </div>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <div class="modal-body">
+                                <!-- Project details-->
+                                <h2 class="text-uppercase">@Model.FirstName @Model.LastName</h2>
+                                <img class="img-fluid d-block mx-auto" src="@imagePath" alt="..." />
+                                <ul class="list-inline">
+                                    <li>
+                                        <strong>Имена:</strong>
+                                        @Model.FirstName @Model.MiddleName @Model.LastName
+                                    </li>
+                                    <li>
+                                        <strong>Пол:</strong>
+                                        @Html.DisplayFor(x=> x.Gender)
+                                    </li>
+                                    <li>
+                                        <strong>Адрес:</strong>
+                                        @Model.Address
+                                    </li>
+                                    <li>
+                                        <strong>Телефон:</strong>
+                                        @Model.PhoneNumber
+                                    </li>
+                                </ul>
+                                <a class="btn btn-primary btn-xl text-uppercase" data-bs-dismiss="modal" asp-area="Reader" asp-controller="Reader" asp-action="Edit" asp-route-id="@ViewBag.ReaderId">
+                                    <i class="fas fa-xmark me-1"></i>
+                                    <span class="text-white">Редакция на данни</span>
+                                </a>
+
+                                @if (User.IsInRole("Administrators"))
+                                {
+                                <a class="btn btn-primary btn-xl text-uppercase" data-bs-dismiss="modal" asp-area="Reader" asp-controller="Reader" asp-action="Delete" asp-route-id="@ViewBag.ReaderId">
+                                    <i class="fas fa-xmark me-1"></i>
+                                    <span class="text-white">Изтриване</span>
+                                </a>
+                                }
+                                <a class="btn btn-primary btn-xl text-uppercase" data-bs-dismiss="modal">
+                                    <i class="fas fa-xmark me-1"></i>
+                                    <span class="text-white">Заети книги</span>
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
     </div>
+
+    <section class="page-section bg-light" id="portfolio">
+        <div class="container">
+            <div class="row">
+                @foreach (var order in Model.Orders)
+                {
+
+                }
+            </div>
+        </div>
+    </section>
 }                      

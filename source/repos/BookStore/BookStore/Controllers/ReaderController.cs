@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +17,13 @@ namespace BookStore.Controllers
     public class ReaderController : Controller
     {
         private readonly IBaseRepository<Reader> _readersRepository;
+        private readonly IBaseRepository<Order> _ordersRepository;
         private IWebHostEnvironment _hostingEnvironment { get; }
         private readonly UserManager<Reader> _userManager;
         private readonly SignInManager<Reader> _signInManager;
 
         public ReaderController(IBaseRepository<Reader> readersRepository
+            , IBaseRepository<Order> ordersRepository
             , IWebHostEnvironment hostingEnvironment
             , UserManager<Reader> userManager
             , SignInManager<Reader> signInManager)
@@ -29,6 +32,7 @@ namespace BookStore.Controllers
             _hostingEnvironment = hostingEnvironment;
             _userManager = userManager;
             _signInManager = signInManager;
+            _ordersRepository = ordersRepository;
         }
 
         [AllowAnonymous]
@@ -61,6 +65,8 @@ namespace BookStore.Controllers
                     Address = model.Address,
                     Gender = model.Gender,
                     PhoneNumber = model.Phone,
+                    Email = model.Email,
+                    UserName = model.Email,
                     ImagePath = imageFileName
                 };
 
@@ -77,25 +83,25 @@ namespace BookStore.Controllers
                     switch (error.Code)
                     {
                         case "PasswordTooShort":
-                            ModelState.AddModelError("Password", "Паролата трябва да съдържа поне 6 символа");
+                            ModelState.AddModelError("", "Паролата трябва да съдържа поне 6 символа");
                             break;
 
                         case "PasswordRequiresNonAlphanumeric":
-                            ModelState.AddModelError("Password", "Паролата трябва да съдържа поне един символ, които не е цифра или буква");
+                            ModelState.AddModelError("", "Паролата трябва да съдържа поне един символ, които не е цифра или буква");
                             break;
 
                         case "PasswordRequiresLower":
-                            ModelState.AddModelError("Password", "Паролата трябва да съдържа поне една малка буква");
+                            ModelState.AddModelError("", "Паролата трябва да съдържа поне една малка буква");
                             break;
 
                         case "PasswordRequiresUpper":
-                            ModelState.AddModelError("Password", "Паролата трябва да съдържа поне една главна буква");
+                            ModelState.AddModelError("", "Паролата трябва да съдържа поне една главна буква");
                             break;
 
                         default:
                             break;
                     }
-                    
+
                 }
             }
 
@@ -162,52 +168,10 @@ namespace BookStore.Controllers
             }
         }
 
-        //[HttpGet]
-        //public IActionResult Create()
-        //{
-        //    ReaderViewModel model = new ReaderViewModel();
-        //    return View("CreateReader", model);
-        //}
-
-        //[HttpPost]
-        //public IActionResult Create(ReaderViewModel model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        model = new ReaderViewModel();
-        //        return View("CreateReader", model);
-        //    }
-
-        //    string imageFileName;
-        //    if (model.Image != null)
-        //    {
-        //        imageFileName = FileUpload.ProcessUploadedFile(model.Image, _hostingEnvironment, "images");
-        //    }
-        //    else
-        //    {
-        //        imageFileName = "no-avatar.jpg";
-        //    }
-
-        //    Reader reader = new Reader
-        //    {
-        //        FirstName = model.FirstName,
-        //        MiddleName = model.MiddleName,
-        //        LastName = model.LastName,
-        //        Address = model.Address,
-        //        Gender = model.Gender,
-        //        PhoneNumber = model.Phone,
-        //        ImagePath = imageFileName
-        //    };
-
-        //    _readersRepository.Insert(reader);
-
-        //    return RedirectToAction("View", new { id = reader.Id });
-        //}
-
         [HttpGet]
-        [AllowAnonymous]
-        public ActionResult View(int id)
+        public IActionResult Profile(string id)
         {
+            ReaderProfileViewModel model = new ReaderProfileViewModel();
             Reader reader = _readersRepository.SelectById(id);
 
             if (reader == null)
@@ -216,14 +180,27 @@ namespace BookStore.Controllers
                 return RedirectToAction("index", "Reader");
             }
 
-            return View("ViewReader", reader);
+            model.FirstName = reader.FirstName;
+            model.MiddleName = reader.MiddleName;
+            model.LastName = reader.LastName;
+            model.Email = reader.Email;
+            model.Address = reader.Address;
+            model.Gender = reader.Gender;
+            model.PhoneNumber = reader.PhoneNumber;
+            model.Orders = _ordersRepository.GetTable().Where(order => order.ReaderId == reader.Id)
+                            .Include(order => order.Book)
+                            .ToList();
+
+            ViewBag.ReaderId = reader.Id;
+            ViewBag.ImagePath = reader.ImagePath;
+  
+            return View("ViewReader", model);
         }
 
         [HttpGet]
-        [AllowAnonymous]
-        public ActionResult Edit(int id)
+        public IActionResult Edit(string id)
         {
-            ReaderViewModel readerViewModel = new ReaderViewModel();
+            EditReaderViewModel readerViewModel = new EditReaderViewModel();
             Reader reader = _readersRepository.SelectById(id);
 
             readerViewModel.FirstName = reader.FirstName;
@@ -240,12 +217,12 @@ namespace BookStore.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(ReaderViewModel model, int id)
+        public IActionResult Edit(EditReaderViewModel model, string id)
         {
             Reader reader = _readersRepository.SelectById(id);
             if (!ModelState.IsValid)
             {
-                model = new ReaderViewModel();
+                model = new EditReaderViewModel();
 
                 model.FirstName = reader.FirstName;
                 model.MiddleName = reader.MiddleName;
@@ -282,11 +259,10 @@ namespace BookStore.Controllers
         }
 
         [HttpGet]
-        public ActionResult Delete(int id)
+        public IActionResult Delete(string id)
         {
             _readersRepository.Delete(id);
             return RedirectToAction("Index", "Reader");
         }
-
     }
 }
