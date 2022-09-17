@@ -28,6 +28,7 @@
                     </label>
                 </div>
             </div>
+            <div asp-validation-summary="All" class="text-danger"></div>
             <button type="submit" class="btn btn-primary">Вход</button>
             <input type="button" class="btn btn-primary" value="Регистрирай се" onclick="location.href='@Url.Action("Register", "Reader")'" />
         </form>

@@ -12,6 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BookStore
 {
@@ -27,7 +29,7 @@ namespace BookStore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContextPool<ApplicationDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DBConnection")));
+            services.AddDbContext<ApplicationDBContext>( options => options.UseSqlServer( Configuration["DBConnection"] ), ServiceLifetime.Transient);
 
             services.AddIdentity<Reader, IdentityRole>(options =>
             {
@@ -61,9 +63,10 @@ namespace BookStore
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             ConfigureAuth(app, env);
+            CreateRoles(serviceProvider);
         }
 
         private void ConfigureAuth(IApplicationBuilder app, IWebHostEnvironment env)
@@ -95,27 +98,53 @@ namespace BookStore
             });
         }
 
-        // In this method we will create default User roles and Admin user for login  
-        //private async Task CreateRoles(RoleManager<IdentityRole> roleManager)
-        //{
-        //    var roles = new List<IdentityRole>
-        //    {
-        //     // These are just the roles I made up. You can make your own!
-        //     new IdentityRole {Name = "Admin",
-        //                          Description = "Пълен достъп до всички функционалности"},
-        //     new IdentityRole {Name = RoleName.CompanyAdmin,
-        //                          Description = "Full access to features within their company."}
-        //    };
+        private void CreateRoles(IServiceProvider serviceProvider)
+        {
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<Reader>>();
 
-        //    foreach (var role in roles)
-        //    {
-        //        if (await roleManager.RoleExistsAsync(role.Name)) continue;
-        //        var result = await roleManager.CreateAsync(role);
-        //        if (result.Succeeded) continue;
+            Task<IdentityResult> roleResult;
 
-        //        // If we get here, something went wrong.
-        //        throw new Exception($"Could not create '{role.Name}' role.");
-        //    }
-        //}
+            //Check that there is an Administrator role and create if not
+            Task<bool> hasAdminRole = roleManager.RoleExistsAsync(RoleNames.SiteAdmin);
+            hasAdminRole.Wait();
+
+            if (!hasAdminRole.Result)
+            {
+                roleResult = roleManager.CreateAsync(new IdentityRole(RoleNames.SiteAdmin));
+                roleResult.Wait();
+            }
+
+            //Check if the admin user exists and create it if not
+            //Add to the Administrator role
+
+            Task<Reader> testUser = userManager.FindByEmailAsync(Configuration["AdminEmail"]);
+            testUser.Wait();
+
+            if (testUser.Result == null)
+            {
+                Reader administrator = new Reader();
+                administrator.Email = Configuration["AdminEmail"];
+                administrator.UserName = Configuration["AdminEmail"];
+                administrator.FirstName = "Admin";
+                administrator.MiddleName = "Admin";
+                administrator.LastName = "Admin";
+                administrator.Address = "Admin";
+                administrator.ImagePath = "Admin";
+                administrator.PhoneNumber = "123123";
+
+                Task<IdentityResult> newUser = userManager.CreateAsync(administrator, Configuration["AdminPassword"]);
+                newUser.Wait();
+
+                if (newUser.Result.Succeeded)
+                {
+                    Task<IdentityResult> newUserRole = userManager.AddToRoleAsync(administrator, RoleNames.SiteAdmin);
+                    newUserRole.Wait();
+
+                    //TODO Log failure to add admin 
+                }
+            }
+
+        }
     }
 }

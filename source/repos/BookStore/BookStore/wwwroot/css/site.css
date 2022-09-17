@@ -12568,3 +12568,9 @@ section#contact {
 #readers_masthead {
     background-image: url("/images/readers.jpg");
 }
+
+.profile-pic {
+    width: 100% !important;
+    height: 30vw !important;
+    object-fit: cover !important;
+}

@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace BookStore.Controllers
@@ -53,6 +54,15 @@ namespace BookStore.Controllers
             else
             {
                 imageFileName = "no-avatar.jpg";
+            }
+
+            Task<bool> emailUsed = IsEmailInUse(model.Email);
+            emailUsed.Wait();
+
+            if (emailUsed.Result)
+            {
+                ModelState.AddModelError("", $"Вече има потребител с имейл {model.Email}");
+                return View(model);
             }
 
             if (ModelState.IsValid)
@@ -140,7 +150,7 @@ namespace BookStore.Controllers
                     return RedirectToAction("index", "home");
                 }
 
-                ModelState.AddModelError(string.Empty, "Invalid login atempt");
+                ModelState.AddModelError("", "Несъвпадение на имейл и парола");
             }
 
             return View(model);
@@ -148,23 +158,24 @@ namespace BookStore.Controllers
 
         public IActionResult Index()
         {
-            List<Reader> readers = _readersRepository.GetTable().ToList();
+            // Show all users except current one
+            List<Reader> readers = _readersRepository.GetTable().Where(reader => reader.Id != User.FindFirstValue(ClaimTypes.NameIdentifier)).ToList();
             return View("ViewReaders", readers);
         }
 
         [AcceptVerbs("Get", "Post")]
         [AllowAnonymous]
-        public async Task<IActionResult> IsEmailInUse(String email)
+        public async Task<bool> IsEmailInUse(String email)
         {
             var user = await _userManager.FindByEmailAsync(email);
 
             if (user == null)
             {
-                return Json(true);
+                return false;
             }
             else
             {
-                return Json($"Вече има потребител с имейл {email}");
+                return true;
             }
         }
 
@@ -257,7 +268,7 @@ namespace BookStore.Controllers
 
             _readersRepository.Update(reader);
 
-            return RedirectToAction("View", new { id = reader.Id });
+            return RedirectToAction("Profile", new { id = reader.Id });
         }
 
         [HttpGet]

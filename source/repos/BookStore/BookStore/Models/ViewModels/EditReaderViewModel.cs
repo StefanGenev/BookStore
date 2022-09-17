@@ -18,11 +18,6 @@ namespace BookStore.Models.ViewModels
         [DisplayName("Фамилия")]
         public string LastName { get; set; }
 
-        [Required(ErrorMessage = "Непопълнен имейл")]
-        [DisplayName("Имейл")]
-        [EmailAddress]
-        public string Email { get; set; }
-
         [Required(ErrorMessage = "Непопълнен адрес")]
         [DisplayName("Адрес")]
         public string Address { get; set; }

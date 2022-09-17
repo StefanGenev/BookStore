@@ -20,7 +20,7 @@
                                 <!-- Project details-->
                                 <h2 class="text-uppercase">@Model.Title</h2>
                                 <p class="item-intro text-muted">Цена: @Model.Price лв.</p>
-                                <img class="img-fluid d-block mx-auto" src="@imagePath" alt="..." />
+                                <img class="img-fluid profile-pic" src="@imagePath" alt="..." />
                                 <p>@Model.Description</p>
                                 <ul class="list-inline">
                                     <li>
@@ -41,7 +41,7 @@
                                     </li>
                                 </ul>
 
-                                @if (User.IsInRole("Administrators"))
+                                @if (User.IsInRole("Admin"))
                                 {
                                     <a class="btn btn-primary btn-xl text-uppercase" data-bs-dismiss="modal" asp-area="Book" asp-controller="Book" asp-action="Edit" asp-route-id="@Model.Id">
                                         <i class="fas fa-xmark me-1"></i>

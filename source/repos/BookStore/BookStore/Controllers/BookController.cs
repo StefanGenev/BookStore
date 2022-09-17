@@ -88,7 +88,8 @@ namespace BookStore.Controllers
             book.Publisher = _publishersRepository.SelectById(book.PublisherId);
 
             bool IsTakenByUser = _ordersRepository.GetTable().Any(order => order.ReaderId == User.FindFirstValue(ClaimTypes.NameIdentifier)
-                                                                             && order.BookId == id);
+                                                                             && order.BookId == id
+                                                                             && order.IsBookReturned == false);
             ViewBag.IsTakenByUser = IsTakenByUser;
 
             if (book == null)

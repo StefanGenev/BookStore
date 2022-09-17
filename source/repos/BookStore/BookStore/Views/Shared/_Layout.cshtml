@@ -25,40 +25,55 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item dropdown">
-                            @if (bIsSignedIn)
+                        @if (bIsSignedIn)
+                        {
+                            @if (User.IsInRole("Admin"))
                             {
-                                @if (User.IsInRole("Administrators"))
-                                {
+                                <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Книги</a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                         <a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">Налични книги</a>
                                         <a class="dropdown-item" asp-area="" asp-controller="Book" asp-action="Create">Добави книга</a>
                                     </div>
-                                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Книги</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a asp-area="" asp-controller="Reader" asp-action="Index" class="nav-link">Читатели</a>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Автори</a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                        <a class="dropdown-item" asp-area="" asp-controller="Reader" asp-action="Index">Текущи читатели</a>
-                                        <a class="dropdown-item" asp-area="" asp-controller="Reader" asp-action="Create">Добави читател</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="Author" asp-action="Index" class="nav-link">Налични автори</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="Author" asp-action="Create">Добави автор</a>
                                     </div>
-                                }
-                                else
-                                {
-                                <li class="nav-item  me-auto">
-                                    <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link">Налични книги</a>
-                                </li>
-                                }
-
-                                var userID = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                                <li class="nav-item">
-                                    <a asp-controller="Reader" asp-action="Profile" asp-route-id="@userID" class="nav-link">@User.Identity.Name</a>
                                 </li>
 
-                                <li class="nav-item">
-                                    <a asp-controller="Reader" asp-action="Logout" class="nav-link">Изход</a>
+                                <li class="nav-item dropdown me-auto">
+                                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Издателства</a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                        <a class="dropdown-item" asp-area="" asp-controller="Publisher" asp-action="Index" class="nav-link">Налични издателства</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="Publisher" asp-action="Create">Добави издателство</a>
+                                    </div>
                                 </li>
                             }
                             else
                             {
+                                <li class="nav-item  me-auto">
+                                    <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link">Налични книги</a>
+                                </li>
+                            }
+
+                            var userID = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                            <li class="nav-item">
+                                <a asp-controller="Reader" asp-action="Profile" asp-route-id="@userID" class="nav-link">@User.Identity.Name</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a asp-controller="Reader" asp-action="Logout" class="nav-link">Изход</a>
+                            </li>
+                        }
+                        else
+                        {
                             <li class="nav-item  me-auto">
                                 <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link">Налични книги</a>
                             </li>
@@ -68,7 +83,7 @@
                             <li class="nav-item">
                                 <a asp-controller="Reader" asp-action="Register" class="nav-link">Регистрация</a>
                             </li>
-                            }
+                        }
                     </ul>
                 </div>
             </div>

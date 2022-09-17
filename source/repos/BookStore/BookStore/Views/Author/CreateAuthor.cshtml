@@ -1,0 +1,31 @@
+﻿@model Author
+
+@{
+    ViewBag.Title = "Добави нов автор";
+}
+
+<h1>@ViewBag.Title</h1>
+
+<div class="row">
+    <div class="col-md-7 px-md-5 align-self-start">
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label asp-for="Name"></label>
+                <textarea class="form-control" asp-for="Name" rows="1"></textarea>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>                 
+            <button type="submit" class="btn btn-primary">Добави</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.custom-file-input').on("change", function () {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).next('.custom-file-label').html(fileName);
+            });
+        });
+    </script>
+}

@@ -1,5 +1,9 @@
 ﻿@model IEnumerable<Book>
 
+@using Microsoft.AspNetCore.Identity;
+@using System.Security.Claims;
+@inject SignInManager<Reader> _signInManager;
+
 @{
     ViewBag.Title = "Книги";
 }
@@ -9,9 +13,16 @@
         <div class="masthead-subheading">Добре дошли в BookStore!</div>
         <div class="masthead-heading text-uppercase">Заемете книга още сега</div>
         <a class="btn btn-primary btn-xl text-uppercase" href="#portfolio">Налични книги</a>
-        @if (User.IsInRole("Administrators"))
+        @if (User.IsInRole("Admin"))
         {
             <a class="btn btn-primary btn-xl text-uppercase" asp-area="Book" asp-controller="Book" asp-action="Create">Добави книга</a>
+        }
+
+        @if (!_signInManager.IsSignedIn(User))
+        {
+            <a class="btn btn-primary btn-xl text-uppercase" asp-area="Reader" asp-controller="Reader" asp-action="Login">Вход</a>
+            <a class="btn btn-primary btn-xl text-uppercase" asp-area="Reader" asp-controller="Reader" asp-action="Register">Регистрация</a>
+
         }
     </div>
 </header>
