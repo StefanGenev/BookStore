@@ -5,7 +5,6 @@
 
 @{
     ViewBag.Title = "Преглед на книга";
-    bool bIsSignedIn = _signInManager.IsSignedIn(User);
 }
 
 @{
@@ -41,15 +40,31 @@
                                         @Model.CopiesAvailable
                                     </li>
                                 </ul>
-                                <a class="btn btn-primary btn-xl text-uppercase" data-bs-dismiss="modal" asp-area="Book" asp-controller="Book" asp-action="Edit" asp-route-id="@Model.Id">
-                                    <i class="fas fa-xmark me-1"></i>
-                                    <span class="text-white">Редакция</span>
-                                </a>
-                                @if (bIsSignedIn && User.IsInRole("Administrators"))
+
+                                @if (User.IsInRole("Administrators"))
                                 {
+                                    <a class="btn btn-primary btn-xl text-uppercase" data-bs-dismiss="modal" asp-area="Book" asp-controller="Book" asp-action="Edit" asp-route-id="@Model.Id">
+                                        <i class="fas fa-xmark me-1"></i>
+                                        <span class="text-white">Редакция</span>
+                                    </a>
                                     <a class="btn btn-primary btn-xl text-uppercase" data-bs-dismiss="modal" asp-area="Book" asp-controller="Book" asp-action="Delete" asp-route-id="@Model.Id">
                                         <i class="fas fa-xmark me-1"></i>
                                         <span class="text-white">Изтриване</span>
+                                    </a>
+                                }
+
+                                @if (ViewBag.IsTakenByUser == true)
+                                {
+                                    <a class="btn btn-primary btn-xl text-uppercase" data-bs-dismiss="modal" asp-area="Book" asp-controller="Book" asp-action="Return" asp-route-id="@Model.Id">
+                                        <i class="fas fa-xmark me-1"></i>
+                                        <span class="text-white">Върни книгата</span>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a class="btn btn-primary btn-xl text-uppercase" data-bs-dismiss="modal" asp-area="Book" asp-controller="Book" asp-action="Take" asp-route-id="@Model.Id">
+                                        <i class="fas fa-xmark me-1"></i>
+                                        <span class="text-white">Заеми книгата</span>
                                     </a>
                                 }
                             </div>

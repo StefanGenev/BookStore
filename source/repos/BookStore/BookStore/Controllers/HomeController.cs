@@ -21,7 +21,7 @@ namespace BookStore.Controllers
         [AllowAnonymous]
         public IActionResult Index()
         {
-            List<Book> books = _booksRepository.GetTable()
+            List<Book> books = _booksRepository.GetTable().Where(book => book.CopiesAvailable > 0)
                 .Include(book => book.Author)
                 .Include(book => book.Publisher)
                 .ToList();

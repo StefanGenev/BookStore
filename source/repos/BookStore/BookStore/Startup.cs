@@ -47,7 +47,8 @@ namespace BookStore
                 options.SlidingExpiration = true;
             });
 
-            services.AddMvc(config => {
+            services.AddMvc(config =>
+            {
                 var policy = new AuthorizationPolicyBuilder()
                                 .RequireAuthenticatedUser()
                                 .Build();
@@ -62,9 +63,15 @@ namespace BookStore
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            ConfigureAuth(app, env);
+        }
+
+        private void ConfigureAuth(IApplicationBuilder app, IWebHostEnvironment env)
+        {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
             }
             else
             {
@@ -87,5 +94,28 @@ namespace BookStore
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
+
+        // In this method we will create default User roles and Admin user for login  
+        //private async Task CreateRoles(RoleManager<IdentityRole> roleManager)
+        //{
+        //    var roles = new List<IdentityRole>
+        //    {
+        //     // These are just the roles I made up. You can make your own!
+        //     new IdentityRole {Name = "Admin",
+        //                          Description = "Пълен достъп до всички функционалности"},
+        //     new IdentityRole {Name = RoleName.CompanyAdmin,
+        //                          Description = "Full access to features within their company."}
+        //    };
+
+        //    foreach (var role in roles)
+        //    {
+        //        if (await roleManager.RoleExistsAsync(role.Name)) continue;
+        //        var result = await roleManager.CreateAsync(role);
+        //        if (result.Succeeded) continue;
+
+        //        // If we get here, something went wrong.
+        //        throw new Exception($"Could not create '{role.Name}' role.");
+        //    }
+        //}
     }
 }

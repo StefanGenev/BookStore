@@ -189,6 +189,8 @@ namespace BookStore.Controllers
             model.PhoneNumber = reader.PhoneNumber;
             model.Orders = _ordersRepository.GetTable().Where(order => order.ReaderId == reader.Id)
                             .Include(order => order.Book)
+                            .Include(order => order.Book.Author)
+                            .Include(order => order.Book.Publisher)
                             .ToList();
 
             ViewBag.ReaderId = reader.Id;

@@ -2,10 +2,11 @@
 using BookStore.Models.ViewModels;
 using BookStore.Repository;
 using BookStore.Utils;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
+using System.Security.Claims;
 
 namespace BookStore.Controllers
 {
@@ -14,16 +15,19 @@ namespace BookStore.Controllers
         private readonly IBaseRepository<Book> _booksRepository;
         private readonly IBaseRepository<Author> _authorsRepository;
         private readonly IBaseRepository<Publisher> _publishersRepository;
+        private readonly IBaseRepository<Order> _ordersRepository;
 
         private IWebHostEnvironment _hostingEnvironment { get; }
         public BookController(IBaseRepository<Book> booksRepository
             , IBaseRepository<Author> authorsRepository
             , IBaseRepository<Publisher> publishersRepository
+            , IBaseRepository<Order> ordersRepository
             , IWebHostEnvironment hostingEnvironment)
         {
             _booksRepository = booksRepository;
             _authorsRepository = authorsRepository;
             _publishersRepository = publishersRepository;
+            _ordersRepository = ordersRepository;
             _hostingEnvironment = hostingEnvironment;
         }
 
@@ -82,6 +86,10 @@ namespace BookStore.Controllers
             Book book = _booksRepository.SelectById(id);
             book.Author = _authorsRepository.SelectById(book.AuthorId);
             book.Publisher = _publishersRepository.SelectById(book.PublisherId);
+
+            bool IsTakenByUser = _ordersRepository.GetTable().Any(order => order.ReaderId == User.FindFirstValue(ClaimTypes.NameIdentifier)
+                                                                             && order.BookId == id);
+            ViewBag.IsTakenByUser = IsTakenByUser;
 
             if (book == null)
             {
@@ -165,6 +173,63 @@ namespace BookStore.Controllers
         {
             _booksRepository.Delete(id);
             return RedirectToAction("index", "home");
+        }
+
+        public ActionResult Return(int id)
+        {
+            Order order = _ordersRepository.GetTable().Where(order => order.ReaderId == User.FindFirstValue(ClaimTypes.NameIdentifier)
+                                                                   && order.BookId == id)
+                                                            .First();
+            if (order != null)
+            {
+                order.IsBookReturned = true;
+                _ordersRepository.Update(order);
+            }
+
+            Book book = _booksRepository.SelectById(id);
+            if (book != null)
+            {
+                book.Author = _authorsRepository.SelectById(book.AuthorId);
+                book.Publisher = _publishersRepository.SelectById(book.PublisherId);
+                book.CopiesAvailable++;
+
+                _booksRepository.Update(book);
+            }
+
+            ViewBag.IsTakenByUser = false;
+
+            return View("ViewBook", book);
+        }
+
+        public ActionResult Take(int id)
+        {
+            Book book = _booksRepository.SelectById(id);
+
+            if (book != null)
+            {
+                book.Author = _authorsRepository.SelectById(book.AuthorId);
+                book.Publisher = _publishersRepository.SelectById(book.PublisherId);
+
+                if (book.CopiesAvailable > 0)
+                {
+                    book.CopiesAvailable--;
+
+                    Order order = new Order()
+                    {
+                        BookId = id,
+                        ReaderId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+                        DateOfOrder = DateTime.Now,
+                        IsBookReturned = false
+                    };
+
+                    _ordersRepository.Insert(order);
+                    _booksRepository.Update(book);
+                }
+            }
+
+            ViewBag.IsTakenByUser = true;
+
+            return View("ViewBook", book);
         }
     }
 }
