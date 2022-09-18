@@ -56,7 +56,7 @@ namespace BookStore.Controllers
                 imageFileName = "no-avatar.jpg";
             }
 
-            Task<bool> emailUsed = IsEmailInUse(model.Email);
+            Task<bool> emailUsed = IsEmailInUse(model.Email ?? "");
             emailUsed.Wait();
 
             if (emailUsed.Result)
@@ -84,6 +84,8 @@ namespace BookStore.Controllers
 
                 if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(reader, RoleNames.Reader);
+
                     await _signInManager.SignInAsync(reader, isPersistent: false);
                     return RedirectToAction("index", "home");
                 }
@@ -159,7 +161,10 @@ namespace BookStore.Controllers
         public IActionResult Index()
         {
             // Show all users except current one
-            List<Reader> readers = _readersRepository.GetTable().Where(reader => reader.Id != User.FindFirstValue(ClaimTypes.NameIdentifier)).ToList();
+            List<Reader> readers = _readersRepository.GetTable()
+                .Where(reader => reader.Id != User.FindFirstValue(ClaimTypes.NameIdentifier))
+                .OrderBy(reader => reader.FirstName)
+                .ToList();
             return View("ViewReaders", readers);
         }
 

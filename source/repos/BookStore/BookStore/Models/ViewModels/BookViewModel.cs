@@ -22,10 +22,11 @@ namespace BookStore.Models.ViewModels
         [Range(1, int.MaxValue, ErrorMessage = "Изберете автор")]
         [DisplayName("Автор")]
         public int AuthorId { get; set; }
-       
+
 
         [Required]
-        [Range(0.01 , double.MaxValue, ErrorMessage = "Некоректна стойност за цена")]
+        [Range(0, 9999.99, ErrorMessage = "Некоректна стойност за цена")]
+        [DataType(DataType.Currency)]
         [DisplayName("Цена")]
         public double Price { get; set; }
 
@@ -43,6 +44,7 @@ namespace BookStore.Models.ViewModels
 
         [Required]
         [DisplayName("Налични копия")]
+        [Range(1, int.MaxValue, ErrorMessage = "Броят налични копия трябва да е положително число")]
         public int CopiesAvailable { get; set; }
 
         [DisplayName("Снимка на корица")]

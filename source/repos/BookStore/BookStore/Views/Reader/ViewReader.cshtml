@@ -1,9 +1,12 @@
 ﻿@using BookStore.Models.ViewModels
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Identity;
 @model ReaderProfileViewModel;
 
 
 @{
     ViewBag.Title = "Преглед на читател";
+    var adminID = User.FindFirstValue(ClaimTypes.NameIdentifier);
 }
 
 @{
@@ -42,7 +45,7 @@
                                     <span class="text-white">Редакция на данни</span>
                                 </a>
 
-                                @if (User.IsInRole("Admin"))
+                                @if (User.IsInRole("Admin") && ViewBag.ReaderId != adminID)
                                 {
                                     <a class="btn btn-primary btn-xl text-uppercase" data-bs-dismiss="modal" asp-area="Reader" asp-controller="Reader" asp-action="Delete" asp-route-id="@ViewBag.ReaderId">
                                         <i class="fas fa-xmark me-1"></i>

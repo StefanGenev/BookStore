@@ -66,7 +66,7 @@ body {
 }
 
 .footer {
-    position: fixed;
+    position:absolute;
     bottom: 0;
     width: 100%;
     white-space: nowrap;
@@ -12561,7 +12561,7 @@ section#contact {
 
 .card-img-top {
     width: 100% !important;
-    height: 16vw !important;
+    height: 20vw !important;
     object-fit: cover !important;
 }
 
@@ -12570,7 +12570,7 @@ section#contact {
 }
 
 .profile-pic {
-    width: 100% !important;
-    height: 30vw !important;
+    width: 400px;
+    height: auto;
     object-fit: cover !important;
 }

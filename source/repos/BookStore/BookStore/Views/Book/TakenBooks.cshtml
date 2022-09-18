@@ -11,11 +11,12 @@
         <thead class="thead-dark">
             <tr>
                 <th scope="col">#</th>
+                <th scope="col">Читател</th>
                 <th scope="col">Книга</th>
                 <th scope="col">Автор</th>
                 <th scope="col">Издателство</th>
+                <th scope="col">Година на издаване</th>
                 <th scope="col">Дата на заемане</th>
-                <th scope="col">Читател заел книгата</th>
             </tr>
         </thead>
         <tbody>
@@ -28,11 +29,12 @@
                 counter++;
                 <tr>
                     <th scope="row">@counter</th>
+                    <td>@order.Reader.FirstName @order.Reader.LastName </td>                 
                     <td>@order.Book.Title</td>
                     <td>@order.Book.Author.Name</td>
                     <td>@order.Book.Publisher.Name</td>
+                    <td>@order.Book.YearOfPublishing</td>
                     <td>@order.DateOfOrder.ToString("dd/MM/yyyy hh:mm:ss")</td>
-                    <td>@order.Reader.FirstName @order.Reader.LastName </td>                 
                 </tr>
             }
         </tbody>

@@ -12,7 +12,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BookStore
@@ -60,6 +59,8 @@ namespace BookStore
 
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddControllersWithViews();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -67,6 +68,15 @@ namespace BookStore
         {
             ConfigureAuth(app, env);
             CreateRoles(serviceProvider);
+
+            var supportedCultures = new[] { "ar", "es" };
+            var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(supportedCultures[0])
+                    .AddSupportedCultures(supportedCultures)
+                    .AddSupportedUICultures(supportedCultures);
+
+            localizationOptions.DefaultRequestCulture.Culture.NumberFormat.NumberDecimalSeparator = ".";
+
+            app.UseRequestLocalization(localizationOptions);
         }
 
         private void ConfigureAuth(IApplicationBuilder app, IWebHostEnvironment env)
@@ -105,14 +115,19 @@ namespace BookStore
 
             Task<IdentityResult> roleResult;
 
-            //Check that there is an Administrator role and create if not
-            Task<bool> hasAdminRole = roleManager.RoleExistsAsync(RoleNames.SiteAdmin);
-            hasAdminRole.Wait();
+            string[] roles = { RoleNames.SiteAdmin, RoleNames.Reader };
 
-            if (!hasAdminRole.Result)
+            foreach (var role in roles)
             {
-                roleResult = roleManager.CreateAsync(new IdentityRole(RoleNames.SiteAdmin));
-                roleResult.Wait();
+                //Check that there is such a role and create if not
+                Task<bool> hasRole = roleManager.RoleExistsAsync(role);
+                hasRole.Wait();
+
+                if (!hasRole.Result)
+                {
+                    roleResult = roleManager.CreateAsync(new IdentityRole(role));
+                    roleResult.Wait();
+                }
             }
 
             //Check if the admin user exists and create it if not
@@ -130,7 +145,7 @@ namespace BookStore
                 administrator.MiddleName = "Admin";
                 administrator.LastName = "Admin";
                 administrator.Address = "Admin";
-                administrator.ImagePath = "Admin";
+                administrator.ImagePath = "";
                 administrator.PhoneNumber = "123123";
 
                 Task<IdentityResult> newUser = userManager.CreateAsync(administrator, Configuration["AdminPassword"]);

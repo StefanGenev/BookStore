@@ -26,8 +26,9 @@ namespace BookStore.Models.ViewModels
         [DisplayName("Пол")]
         public Gender Gender { get; set; }
 
-        [Required(ErrorMessage = "Непопълнен телефон")]
-        [DisplayName("Телефон")]
+        [Required(ErrorMessage = "Непопълнен телефонен номер")]
+        [RegularExpression(@"^(\d{10})$", ErrorMessage = "Невалиден телефонен номер")]
+        [DisplayName("Телефонен номер")]
         public string Phone { get; set; }
 
         [DisplayName("Профилна снимка")]

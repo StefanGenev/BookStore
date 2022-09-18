@@ -16,7 +16,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar sticky-top navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar sticky-top navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 lead">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BookStore</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -96,9 +96,12 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted static-bottom">
-        <div class="container">
-            &copy; 2022 - BookStore - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="border-top footer text-muted">
+        <div class="container lead">
+            &copy; 2022 - BookStore -
+            <a href="https://github.com/StefanGenev/BookStore">
+                Github
+            </a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

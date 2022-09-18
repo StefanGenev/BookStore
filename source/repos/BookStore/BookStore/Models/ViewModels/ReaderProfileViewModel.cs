@@ -33,7 +33,7 @@ namespace BookStore.Models.ViewModels
         public Gender Gender { get; set; }
 
         [Required(ErrorMessage = "Непопълнен телефон")]
-        [DisplayName("Телефон")]
+        [DisplayName("Телефонен номер")]
         public string PhoneNumber { get; set; }
 
         [DisplayName("Профилна снимка")]

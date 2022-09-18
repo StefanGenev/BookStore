@@ -242,6 +242,7 @@ namespace BookStore.Controllers
                                                         .Include(order => order.Book.Author)
                                                         .Include(order => order.Book.Publisher)
                                                         .Include(order => order.Reader)
+                                                        .OrderBy(order => order.ReaderId)
                                                         .ToList();
             return View("TakenBooks", orders);
         }
