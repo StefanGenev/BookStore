@@ -4,7 +4,9 @@ using BookStore.Repository;
 using BookStore.Utils;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 
@@ -231,6 +233,17 @@ namespace BookStore.Controllers
             ViewBag.IsTakenByUser = true;
 
             return View("ViewBook", book);
+        }
+
+        public ActionResult TakenBooks()
+        {
+            List<Order> orders = _ordersRepository.GetTable().Where(order => order.IsBookReturned == false)
+                                                        .Include(order => order.Book)
+                                                        .Include(order => order.Book.Author)
+                                                        .Include(order => order.Book.Publisher)
+                                                        .Include(order => order.Reader)
+                                                        .ToList();
+            return View("TakenBooks", orders);
         }
     }
 }

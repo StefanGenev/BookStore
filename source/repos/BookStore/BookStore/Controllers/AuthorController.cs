@@ -25,17 +25,44 @@ namespace BookStore.Controllers
         public IActionResult Create()
         {
             Author author = new Author();
-            return View("CreateAuthor", author);
+            return View("Author", author);
         }
 
         [HttpPost]
         public IActionResult Create(Author author)
         {
             if (!ModelState.IsValid)
-                return View("CreateAuthor", author);
+                return View("Author", author);
 
             _authorsRepository.Insert(author);
 
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            Author record = _authorsRepository.SelectById(id);
+            ViewBag.RecordId = id;
+
+            return View("Author", record);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Author record, int id)
+        {
+            if (!ModelState.IsValid)
+                return View("Author", record);
+
+            _authorsRepository.Update(record);
+
+            return RedirectToAction("Index");
+        }
+
+
+        public ActionResult Delete(int id)
+        {
+            _authorsRepository.Delete(id);
             return RedirectToAction("Index");
         }
     }

@@ -1,0 +1,40 @@
+﻿@model IEnumerable<Order>
+
+@{
+    ViewBag.Title = "Заети книги";
+}
+
+<h1>@ViewBag.Title</h1>
+
+<div class="container">
+    <table class="table table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Книга</th>
+                <th scope="col">Автор</th>
+                <th scope="col">Издателство</th>
+                <th scope="col">Дата на заемане</th>
+                <th scope="col">Читател заел книгата</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @{
+                var counter = 0;
+            }
+            @foreach (var order in Model)
+            {
+                counter++;
+                <tr>
+                    <th scope="row">@counter</th>
+                    <td>@order.Book.Title</td>
+                    <td>@order.Book.Author.Name</td>
+                    <td>@order.Book.Publisher.Name</td>
+                    <td>@order.DateOfOrder.ToString("dd/MM/yyyy hh:mm:ss")</td>
+                    <td>@order.Reader.FirstName @order.Reader.LastName </td>                 
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
