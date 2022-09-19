@@ -25,8 +25,7 @@ namespace BookStore.Models.ViewModels
 
 
         [Required]
-        [Range(0, 9999.99, ErrorMessage = "Некоректна стойност за цена")]
-        [DataType(DataType.Currency)]
+        [Range(0, 9999.99, ErrorMessage = "Непопълнена стойност за цена. Цената трябва да е положително число ")]
         [DisplayName("Цена")]
         public double Price { get; set; }
 
