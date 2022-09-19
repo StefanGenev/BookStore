@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace BookStore
@@ -69,14 +70,9 @@ namespace BookStore
             ConfigureAuth(app, env);
             CreateRoles(serviceProvider);
 
-            var supportedCultures = new[] { "ar", "es" };
-            var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(supportedCultures[0])
-                    .AddSupportedCultures(supportedCultures)
-                    .AddSupportedUICultures(supportedCultures);
-
-            localizationOptions.DefaultRequestCulture.Culture.NumberFormat.NumberDecimalSeparator = ".";
-
-            app.UseRequestLocalization(localizationOptions);
+            var cultureInfo = new CultureInfo("en-US");
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
         }
 
         private void ConfigureAuth(IApplicationBuilder app, IWebHostEnvironment env)

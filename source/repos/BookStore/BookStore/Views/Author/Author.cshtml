@@ -5,7 +5,10 @@
     var buttonName = "Добави";
 
     @if (@ViewBag.RecordId != null)
+    {
         buttonName = "Редакция";
+        ViewBag.Title = "Редакция на автор";
+    }
 }
 
 <h1>@ViewBag.Title</h1>
