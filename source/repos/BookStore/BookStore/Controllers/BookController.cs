@@ -262,15 +262,35 @@ namespace BookStore.Controllers
             return View("ViewBook", book);
         }
 
-        public ActionResult TakenBooks()
+        public ActionResult TakenBooks(string searchString)
         {
-            List<Order> orders = _ordersRepository.GetTable().Where(order => order.IsBookReturned == false)
+            List<Order> orders = new List<Order>();
+            if (searchString != null)
+            {
+                orders = _ordersRepository.GetTable().Where(order => order.IsBookReturned == false 
+                                                            && ( order.Book.Title.ToLower().IndexOf(searchString.ToLower()) >= 0
+                                                             || order.Book.Author.Name.ToLower().IndexOf(searchString.ToLower()) >= 0
+                                                             || order.Book.Publisher.Name.ToLower().IndexOf(searchString.ToLower()) >= 0
+                                                             || order.Reader.FirstName.ToLower().IndexOf(searchString.ToLower()) >= 0
+                                                             || order.Reader.LastName.ToLower().IndexOf(searchString.ToLower()) >= 0 ) )
                                                         .Include(order => order.Book)
                                                         .Include(order => order.Book.Author)
                                                         .Include(order => order.Book.Publisher)
                                                         .Include(order => order.Reader)
                                                         .OrderBy(order => order.ReaderId)
                                                         .ToList();
+            }
+            else
+            {
+                orders = _ordersRepository.GetTable().Where(order => order.IsBookReturned == false)
+                                                        .Include(order => order.Book)
+                                                        .Include(order => order.Book.Author)
+                                                        .Include(order => order.Book.Publisher)
+                                                        .Include(order => order.Reader)
+                                                        .OrderBy(order => order.ReaderId)
+                                                        .ToList();
+            }
+            
             return View("TakenBooks", orders);
         }
     }

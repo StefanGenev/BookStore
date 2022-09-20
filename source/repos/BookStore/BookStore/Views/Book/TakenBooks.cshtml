@@ -6,6 +6,15 @@
 
 <h1>@ViewBag.Title</h1>
 
+<form class="row g-3" asp-controller="Book" asp-action="TakenBooks" method="get">
+    <div class="col">
+        <input type="text" name="SearchString" class="form-control mb-3" placeholder="Заглавие, автор, издателство, читател" />
+    </div>
+    <div class="col">
+        <input class="btn btn-primary mb-2" type="submit" value="Търси" />
+    </div>
+</form>
+
 <div class="container">
     <table class="table table-hover">
         <thead class="thead-dark">
@@ -39,4 +48,8 @@
             }
         </tbody>
     </table>
+    @if (Model.Count() <= 0)
+    {
+        <h2 class="text-center">Няма намерени резултати</h2>
+    }
 </div>
