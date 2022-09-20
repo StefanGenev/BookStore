@@ -31,6 +31,15 @@
         <div class="text-center">
             <h2 class="section-heading text-uppercase">Налични книги</h2>
             <h3 class="section-subheading text-muted">Нашият избор, състоящ се от всякакви жанрове</h3>
+
+            <form class="row g-3" asp-controller="Book" asp-action="Index" method="get">
+                <div class="col"></div>
+                <div class="col">
+                    <input type="text" name="SearchString" class="form-control mb-2" placeholder="Заглавие, автор, издателство" />
+                    <input class="btn btn-primary mb-2" type="submit" value="Търси" />
+                </div>
+                <div class="col"></div>
+            </form>
         </div>
         <div class="row">
             @foreach (var book in Model)
@@ -52,6 +61,10 @@
                         </div>
                     </div>
                 </div>
+            }
+            @if (Model.Count() <= 0)
+            {
+                <h2 class="text-center">Няма намерени резултати</h2>
             }
         </div>
     </div>

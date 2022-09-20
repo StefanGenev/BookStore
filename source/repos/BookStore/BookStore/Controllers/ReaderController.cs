@@ -87,7 +87,7 @@ namespace BookStore.Controllers
                     await _userManager.AddToRoleAsync(reader, RoleNames.Reader);
 
                     await _signInManager.SignInAsync(reader, isPersistent: false);
-                    return RedirectToAction("index", "home");
+                    return RedirectToAction("index", "Book");
                 }
 
                 foreach (IdentityError error in result.Errors)
@@ -124,7 +124,7 @@ namespace BookStore.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("index", "home");
+            return RedirectToAction("index", "Book");
         }
 
         [HttpGet]
@@ -149,7 +149,7 @@ namespace BookStore.Controllers
                         return LocalRedirect(returnUrl);
                     }
 
-                    return RedirectToAction("index", "home");
+                    return RedirectToAction("index", "Book");
                 }
 
                 ModelState.AddModelError("", "Несъвпадение на имейл и парола");
@@ -158,13 +158,29 @@ namespace BookStore.Controllers
             return View(model);
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string searchString)
         {
-            // Show all users except current one
-            List<Reader> readers = _readersRepository.GetTable()
+            List<Reader> readers = new List<Reader>();
+            if (searchString != null)
+            {
+                readers = _readersRepository.GetTable()
+                .Where(reader => reader.Id != User.FindFirstValue(ClaimTypes.NameIdentifier) 
+                    && ( reader.FirstName.ToLower().IndexOf( searchString.ToLower() ) >= 0
+                         || reader.MiddleName.ToLower().IndexOf(searchString.ToLower() ) >= 0
+                         || reader.LastName.ToLower().IndexOf(searchString.ToLower() ) >= 0 ) 
+                       )
+                .OrderBy(reader => reader.FirstName)
+                .ToList();
+            }
+            else
+            {
+                // Show all users except current one
+                readers = _readersRepository.GetTable()
                 .Where(reader => reader.Id != User.FindFirstValue(ClaimTypes.NameIdentifier))
                 .OrderBy(reader => reader.FirstName)
                 .ToList();
+            }
+
             return View("ViewReaders", readers);
         }
 

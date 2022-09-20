@@ -15,9 +15,18 @@ namespace BookStore.Controllers
             _authorsRepository = authorsRepository;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string searchString)
         {
-            List<Author> authors = _authorsRepository.GetTable().ToList();
+            List<Author> authors = new List<Author>();
+            if (searchString != null)
+            {
+                authors = _authorsRepository.GetTable()
+                                            .Where(author => author.Name.ToLower().IndexOf(searchString.ToLower()) >= 0)
+                                            .ToList();
+            }
+            else
+                authors = _authorsRepository.GetTable().ToList();
+
             return View("ViewAuthors", authors);
         }
 

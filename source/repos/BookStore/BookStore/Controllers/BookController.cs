@@ -2,6 +2,7 @@
 using BookStore.Models.ViewModels;
 using BookStore.Repository;
 using BookStore.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +32,32 @@ namespace BookStore.Controllers
             _publishersRepository = publishersRepository;
             _ordersRepository = ordersRepository;
             _hostingEnvironment = hostingEnvironment;
+        }
+
+        [AllowAnonymous]
+        public IActionResult Index(string searchString)
+        {
+            List<Book> books = new List<Book>();
+            if (searchString != null)
+            {
+                books = _booksRepository.GetTable().Where( book => book.CopiesAvailable > 0 
+                                                        && ( book.Title.ToLower().IndexOf( searchString.ToLower() ) >= 0
+                                                             || book.Author.Name.ToLower().IndexOf( searchString.ToLower() ) >= 0 
+                                                             || book.Publisher.Name.ToLower().IndexOf( searchString.ToLower() ) >= 0 )
+                                                          )
+                                                        .Include(book => book.Author)
+                                                        .Include(book => book.Publisher)
+                                                        .ToList();
+            }
+            else
+            {
+                books = _booksRepository.GetTable().Where(book => book.CopiesAvailable > 0)
+                .Include(book => book.Author)
+                .Include(book => book.Publisher)
+                .ToList();
+            }
+
+            return View(books);
         }
 
         [HttpGet]
@@ -97,7 +124,7 @@ namespace BookStore.Controllers
             if (book == null)
             {
                 Response.StatusCode = 404;
-                return RedirectToAction("index", "home");
+                return RedirectToAction("index", "book");
             }
 
             return View("ViewBook", book);
@@ -175,7 +202,7 @@ namespace BookStore.Controllers
         public ActionResult Delete(int id)
         {
             _booksRepository.Delete(id);
-            return RedirectToAction("index", "home");
+            return RedirectToAction("index", "book");
         }
 
         public ActionResult Return(int id)

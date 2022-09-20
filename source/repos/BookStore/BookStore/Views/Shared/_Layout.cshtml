@@ -18,7 +18,7 @@
     <header>
         <nav class="navbar sticky-top navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 lead">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BookStore</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Book" asp-action="Index">BookStore</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -32,7 +32,7 @@
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Книги</a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                        <a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">Налични книги</a>
+                                        <a class="dropdown-item" asp-area="" asp-controller="Book" asp-action="Index">Налични книги</a>
                                         <a class="dropdown-item" asp-area="" asp-controller="Book" asp-action="TakenBooks">Заети книги</a>
                                         <a class="dropdown-item" asp-area="" asp-controller="Book" asp-action="Create">Добави книга</a>
                                     </div>
@@ -60,7 +60,7 @@
                             else
                             {
                                 <li class="nav-item  me-auto">
-                                    <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link">Налични книги</a>
+                                    <a asp-area="" asp-controller="Book" asp-action="Index" class="nav-link">Налични книги</a>
                                 </li>
                             }
 
@@ -76,7 +76,7 @@
                         else
                         {
                             <li class="nav-item  me-auto">
-                                <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link">Налични книги</a>
+                                <a asp-area="" asp-controller="Book" asp-action="Index" class="nav-link">Налични книги</a>
                             </li>
                             <li class="nav-item">
                                 <a asp-controller="Reader" asp-action="Login" class="nav-link">Вход</a>
