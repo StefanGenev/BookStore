@@ -41,6 +41,14 @@ namespace BookStore.Repository
                 .HasOne(order => order.Reader)
                 .WithMany()
                 .HasForeignKey(order => order.ReaderId);
+
+            modelBuilder.Entity<Author>()
+                            .HasIndex(author => author.Name)
+                            .IsUnique();
+
+            modelBuilder.Entity<Publisher>()
+                            .HasIndex(publisher => publisher.Name)
+                            .IsUnique();
         }
     }
 }

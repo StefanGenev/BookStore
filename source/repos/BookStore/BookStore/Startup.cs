@@ -143,6 +143,7 @@ namespace BookStore
                 administrator.Address = "Admin";
                 administrator.ImagePath = "";
                 administrator.PhoneNumber = "123123";
+                administrator.Gender = Gender.Male;
 
                 Task<IdentityResult> newUser = userManager.CreateAsync(administrator, Configuration["AdminPassword"]);
                 newUser.Wait();
